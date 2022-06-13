@@ -1,0 +1,14 @@
+# Node
+node_modules/
+npm-debug.log
+
+# Web Storm
+/.idea
+*.iml
+
+# Eclipse files
+.settings
+.buildpath
+.project
+
+.vscode/
