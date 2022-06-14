@@ -1,0 +1,5 @@
+Hello there, Let's do some javascript exercise.
+
+What will these yield in javascript? '5 > 7', '0 < 3
+
+Have you heard of bitwise AND('&')?

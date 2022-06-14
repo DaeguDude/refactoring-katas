@@ -1,0 +1,10 @@
+Whatcha doing?
+
+Hello there, my name is Sanghk kim.
+
+I am working on refactoring code.
+
+What does this will yield in javascript? '5 > 7'
+What about this? '0 < 3'
+
+Tom & Jerry was one of my favorite tv show when I was young.
