@@ -81,16 +81,24 @@ class HtmlTextConverter {
     this.textContentIndex++;
   }
 
-  convertToHtml() {
-    const textContent = fs
+  stashNextCharacterAndAdvanceThePointer(textContent) {
+    const character = textContent.charAt(this.textContentIndex);
+    this.increaseTextContentIndex();
+    return character;
+  }
+
+  getTextContent() {
+    return fs
       .readFileSync(`${__dirname}${this._fullFilenameWithPath}`)
       .toString();
+  }
 
-    const stashNextCharacterAndAdvanceThePointer = () => {
-      const character = textContent.charAt(this.textContentIndex);
-      this.increaseTextContentIndex();
-      return character;
-    };
+  getFilename() {
+    return this._fullFilenameWithPath;
+  }
+
+  convertToHtml() {
+    const textContent = this.getTextContent();
 
     var addANewLine = function () {
       var line = convertedLine.join("");
@@ -104,7 +112,8 @@ class HtmlTextConverter {
 
     var html = [];
     var convertedLine = [];
-    var characterToConvert = stashNextCharacterAndAdvanceThePointer();
+    var characterToConvert =
+      this.stashNextCharacterAndAdvanceThePointer(textContent);
 
     while (this.textContentIndex <= textContent.length) {
       switch (characterToConvert) {
@@ -124,7 +133,8 @@ class HtmlTextConverter {
           pushACharacterToTheOutput();
       }
 
-      characterToConvert = stashNextCharacterAndAdvanceThePointer();
+      characterToConvert =
+        this.stashNextCharacterAndAdvanceThePointer(textContent);
     }
 
     addANewLine();
@@ -134,10 +144,6 @@ class HtmlTextConverter {
 
     console.log("joined html: ", html.join("<br />"));
     return html.join("<br />");
-  }
-
-  getFilename() {
-    return this._fullFilenameWithPath;
   }
 }
 
