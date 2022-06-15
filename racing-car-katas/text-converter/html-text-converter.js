@@ -81,12 +81,6 @@ class HtmlTextConverter {
     this.textContentIndex++;
   }
 
-  stashNextCharacterAndAdvanceThePointer(textContent) {
-    const character = textContent.charAt(this.textContentIndex);
-    this.increaseTextContentIndex();
-    return character;
-  }
-
   getTextContent() {
     return fs
       .readFileSync(`${__dirname}${this._fullFilenameWithPath}`)
@@ -95,6 +89,10 @@ class HtmlTextConverter {
 
   getFilename() {
     return this._fullFilenameWithPath;
+  }
+
+  getCharacter(textContent, textContentIndex) {
+    return textContent.charAt(textContentIndex);
   }
 
   convertToHtml() {
@@ -106,17 +104,15 @@ class HtmlTextConverter {
       convertedLine = [];
     };
 
-    var pushACharacterToTheOutput = function () {
+    var pushACharacterToTheOutput = function (characterToConvert) {
       convertedLine.push(characterToConvert);
     };
 
     var html = [];
     var convertedLine = [];
-    var characterToConvert =
-      this.stashNextCharacterAndAdvanceThePointer(textContent);
 
     while (this.textContentIndex <= textContent.length) {
-      switch (characterToConvert) {
+      switch (this.getCharacter(textContent, this.textContentIndex)) {
         case "<":
           convertedLine.push("&lt;");
           break;
@@ -130,19 +126,16 @@ class HtmlTextConverter {
           addANewLine();
           break;
         default:
-          pushACharacterToTheOutput();
+          pushACharacterToTheOutput(
+            this.getCharacter(textContent, this.textContentIndex)
+          );
       }
 
-      characterToConvert =
-        this.stashNextCharacterAndAdvanceThePointer(textContent);
+      this.increaseTextContentIndex();
     }
 
     addANewLine();
 
-    console.log({ html, convertedLine, characterToConvert });
-    console.log("this.textContentIndex", this.textContentIndex);
-
-    console.log("joined html: ", html.join("<br />"));
     return html.join("<br />");
   }
 }

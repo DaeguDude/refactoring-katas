@@ -46,9 +46,11 @@ describe("Html Converter", function () {
   });
 
   describe("HtmlTextConverter works well", function () {
-    var converter = new HtmlTextConverter("/foo.txt");
-    expect(converter.convertToHtml()).toBe(
-      "Hello there, Let's do some javascript exercise.<br /><br />What will these yield in javascript? '5 &gt; 7', '0 &lt; 3<br /><br />Have you heard of bitwise AND('&amp;')?"
-    );
+    it("Works for every case", function () {
+      var converter = new HtmlTextConverter("/foo.txt");
+      expect(converter.convertToHtml()).toBe(
+        "Hello there, Let's do some javascript exercise.<br /><br />What will these yield in javascript? '5 &gt; 7', '0 &lt; 3<br /><br />Have you heard of bitwise AND('&amp;')?"
+      );
+    });
   });
 });
