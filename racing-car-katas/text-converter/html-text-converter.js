@@ -37,14 +37,15 @@ class HtmlTextConverter {
     return textContent.charAt(textContentIndex);
   }
 
-  pushACharacterToTheOutput(characterToConvert) {
-    this.addCharacterToConvertedLine(characterToConvert);
+  getResult(convertedLines) {
+    return convertedLines.join("<br />");
   }
 
   convertToHtml() {
     const textContent = this.getTextContent();
-    const result = [];
+    const convertedLines = [];
 
+    // TODO: What can I do with this? It seems a bit messy
     while (this.textContentIndex <= textContent.length) {
       switch (this.getCharacter(textContent, this.textContentIndex)) {
         case "<":
@@ -57,11 +58,12 @@ class HtmlTextConverter {
           this.addCharacterToConvertedLine("&amp;");
           break;
         case "\n":
-          result.push(this.getConvertedLine().join(""));
+          // TODO: What about this? There is a duplication
+          convertedLines.push(this.getConvertedLine().join(""));
           this.resetConvertedLine();
           break;
         default:
-          this.pushACharacterToTheOutput(
+          this.addCharacterToConvertedLine(
             this.getCharacter(textContent, this.textContentIndex)
           );
       }
@@ -69,10 +71,9 @@ class HtmlTextConverter {
       this.increaseTextContentIndex();
     }
 
-    result.push(this.getConvertedLine().join(""));
-    this.resetConvertedLine();
+    convertedLines.push(this.getConvertedLine().join(""));
 
-    return result.join("<br />");
+    return this.getResult(convertedLines);
   }
 }
 
