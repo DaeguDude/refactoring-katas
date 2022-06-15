@@ -5,7 +5,6 @@ class HtmlTextConverter {
     this._fullFilenameWithPath = fullFilenameWithPath;
     this.textContentIndex = 0;
     this.convertedLine = [];
-    this.html = [];
   }
 
   resetConvertedLine() {
@@ -38,22 +37,13 @@ class HtmlTextConverter {
     return textContent.charAt(textContentIndex);
   }
 
-  getHtml() {
-    return this.html;
-  }
-
   pushACharacterToTheOutput(characterToConvert) {
     this.addCharacterToConvertedLine(characterToConvert);
   }
 
-  addANewLine(html) {
-    var line = this.getConvertedLine().join("");
-    html.push(line);
-    this.resetConvertedLine();
-  }
-
   convertToHtml() {
     const textContent = this.getTextContent();
+    const result = [];
 
     while (this.textContentIndex <= textContent.length) {
       switch (this.getCharacter(textContent, this.textContentIndex)) {
@@ -67,7 +57,8 @@ class HtmlTextConverter {
           this.addCharacterToConvertedLine("&amp;");
           break;
         case "\n":
-          this.addANewLine(this.getHtml());
+          result.push(this.getConvertedLine().join(""));
+          this.resetConvertedLine();
           break;
         default:
           this.pushACharacterToTheOutput(
@@ -78,9 +69,10 @@ class HtmlTextConverter {
       this.increaseTextContentIndex();
     }
 
-    this.addANewLine(this.getHtml());
+    result.push(this.getConvertedLine().join(""));
+    this.resetConvertedLine();
 
-    return this.getHtml().join("<br />");
+    return result.join("<br />");
   }
 }
 
