@@ -4,6 +4,16 @@ class HtmlTextConverter {
   constructor(fullFilenameWithPath) {
     this._fullFilenameWithPath = fullFilenameWithPath;
     this.textContentIndex = 0;
+    this.convertedLine = [];
+    this.html = [];
+  }
+
+  resetConvertedLine() {
+    this.convertedLine = [];
+  }
+
+  addCharacterToConvertedLine(character) {
+    this.convertedLine.push(character);
   }
 
   increaseTextContentIndex() {
@@ -16,6 +26,10 @@ class HtmlTextConverter {
       .toString();
   }
 
+  getConvertedLine() {
+    return this.convertedLine;
+  }
+
   getFilename() {
     return this._fullFilenameWithPath;
   }
@@ -24,38 +38,39 @@ class HtmlTextConverter {
     return textContent.charAt(textContentIndex);
   }
 
+  getHtml() {
+    return this.html;
+  }
+
+  pushACharacterToTheOutput(characterToConvert) {
+    this.addCharacterToConvertedLine(characterToConvert);
+  }
+
+  addANewLine(html) {
+    var line = this.getConvertedLine().join("");
+    html.push(line);
+    this.resetConvertedLine();
+  }
+
   convertToHtml() {
     const textContent = this.getTextContent();
-
-    var addANewLine = function () {
-      var line = convertedLine.join("");
-      html.push(line);
-      convertedLine = [];
-    };
-
-    var pushACharacterToTheOutput = function (characterToConvert) {
-      convertedLine.push(characterToConvert);
-    };
-
-    var html = [];
-    var convertedLine = [];
 
     while (this.textContentIndex <= textContent.length) {
       switch (this.getCharacter(textContent, this.textContentIndex)) {
         case "<":
-          convertedLine.push("&lt;");
+          this.addCharacterToConvertedLine("&lt;");
           break;
         case ">":
-          convertedLine.push("&gt;");
+          this.addCharacterToConvertedLine("&gt;");
           break;
         case "&":
-          convertedLine.push("&amp;");
+          this.addCharacterToConvertedLine("&amp;");
           break;
         case "\n":
-          addANewLine();
+          this.addANewLine(this.getHtml());
           break;
         default:
-          pushACharacterToTheOutput(
+          this.pushACharacterToTheOutput(
             this.getCharacter(textContent, this.textContentIndex)
           );
       }
@@ -63,9 +78,9 @@ class HtmlTextConverter {
       this.increaseTextContentIndex();
     }
 
-    addANewLine();
+    this.addANewLine(this.getHtml());
 
-    return html.join("<br />");
+    return this.getHtml().join("<br />");
   }
 }
 
